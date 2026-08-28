@@ -1,20 +1,28 @@
 package com.crypto.EvoCoin.crypto.service;
 
 import com.crypto.EvoCoin.common.util.CryptoPrice;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-public class CryptoCache {
+@Slf4j
+@Service
+public class CryptoCacheService {
 
     private static final int MAX_SIZE = 100;
 
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public CryptoCache(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
+    public CryptoCacheService(
+            @Qualifier("evocoinRedisTemplate") RedisTemplate<String, String> redisTemplate,
+            ObjectMapper objectMapper
+    ) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
     }
@@ -23,10 +31,13 @@ public class CryptoCache {
      * Cache initialization with 100 historic data.
      */
     public void initialize(String key, List<CryptoPrice> prices) {
-
         if (prices == null || prices.isEmpty()) {
+            log.info(key);
+            log.info("Nulla");
             return;
         }
+        log.info(key);
+        log.info("No nulla");
 
         List<String> values = prices.stream()
                 .map(this::toJson)
@@ -61,13 +72,16 @@ public class CryptoCache {
             return;
         }
 
-        if (current.timestamp().equals(price.timestamp())) {
+        if (current.timestamp() == (price.timestamp())) {
+            log.info(String.valueOf(price.timestamp()));
+            log.info("Update");
 
             redisTemplate.opsForList()
                     .set(key, 0, json);
 
-        } else if(current.timestamp() > price.timestamp()) {
-
+        } else if(current.timestamp() < price.timestamp()) {
+            log.info(String.valueOf(price.timestamp()));
+            log.info("New");
             redisTemplate.opsForList()
                     .leftPush(key, json);
 
