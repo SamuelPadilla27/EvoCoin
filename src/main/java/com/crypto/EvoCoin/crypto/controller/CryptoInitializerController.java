@@ -17,17 +17,16 @@ public class CryptoInitializerController {
 
     @EventListener(ApplicationReadyEvent.class)
     public void cryptoInitialization(){
-        log.info("Iniciando inicialización de criptomoneda...");
 
 
         generalCryptoService.initializeCacheData("BTCUSDT", "5m").subscribe(
-                result -> log.info("Resultado: {}", result),
+                result -> log.info("initializing crypto values success"),
                 error -> log.error(
-                        "ERROR inicializando crypto",
+                        "Error initializing crypto values",
                         error
                 ),
                 () -> log.info(
-                        "========== INICIALIZACION FINALIZADA =========="
+                        "========== Initialization of crypto values complete =========="
                 )
         );
     }

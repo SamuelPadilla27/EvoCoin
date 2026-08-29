@@ -35,9 +35,6 @@ public class BinanceRestClientService {
     public Mono<List<CryptoPrice>> getLast100(
             String symbol,
             String interval) {
-
-        log.info(symbol);
-        log.info(interval);
         return  client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/v3/klines")

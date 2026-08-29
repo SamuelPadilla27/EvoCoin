@@ -31,11 +31,11 @@ public class GeneralCryptoService {
                         cryptoCacheService.initialize(key, prices)
                 ).doOnSuccess(prices ->
                         log.info(
-                                "Cache inicializada con {} datos" + prices.size()
+                                "Cache initialized with "+ prices.size() + " datos"
                         )
                 ).doOnError(error ->
                         log.info(
-                                "Cache inicializada con {} datos",
+                                "Error initializing cache",
                                 error
                         )
                 ).then(Mono.fromRunnable(() ->
