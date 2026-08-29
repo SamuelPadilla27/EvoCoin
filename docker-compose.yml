@@ -12,9 +12,11 @@ services:
       redis:
         condition: service_started
     environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: 3600000
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/evocoin
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379

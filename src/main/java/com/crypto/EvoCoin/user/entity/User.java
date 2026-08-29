@@ -36,7 +36,7 @@ public class User {
     public User() {
     }
 
-    public User(UserRegistration pUser){
+    public User(UserRegistration pUser, String pHashedPassword){
         this.email =pUser.email();
         this.username = pUser.username();
         this.password = pUser.password();
