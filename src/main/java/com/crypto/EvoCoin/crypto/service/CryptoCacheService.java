@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -32,12 +34,8 @@ public class CryptoCacheService {
      */
     public void initialize(String key, List<CryptoPrice> prices) {
         if (prices == null || prices.isEmpty()) {
-            log.info(key);
-            log.info("Nulla");
             return;
         }
-        log.info(key);
-        log.info("No nulla");
 
         List<String> values = prices.stream()
                 .map(this::toJson)
@@ -73,15 +71,11 @@ public class CryptoCacheService {
         }
 
         if (current.timestamp() == (price.timestamp())) {
-            log.info(String.valueOf(price.timestamp()));
-            log.info("Update");
 
             redisTemplate.opsForList()
                     .set(key, 0, json);
 
         } else if(current.timestamp() < price.timestamp()) {
-            log.info(String.valueOf(price.timestamp()));
-            log.info("New");
             redisTemplate.opsForList()
                     .leftPush(key, json);
 
