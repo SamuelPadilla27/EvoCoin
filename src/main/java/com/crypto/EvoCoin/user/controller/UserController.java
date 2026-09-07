@@ -20,13 +20,5 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/api/user/saveNewUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void saveNewUser(@RequestBody UserRegistration pUser){
-        try {
-            userService.saveUser(pUser);
-        } catch (Exception e) {
-            log.error("Failed: saveNewUser", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
-    }
+
 }

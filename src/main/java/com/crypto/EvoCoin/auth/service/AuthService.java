@@ -7,8 +7,10 @@ import com.crypto.EvoCoin.user.entity.User;
 import com.crypto.EvoCoin.user.service.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;

@@ -7,9 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "trn_user")
+@Table(name = "users")
 @Setter
 @Getter
 public class User {
@@ -17,17 +18,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
     @Column(name = "created_at", nullable = false)
@@ -36,10 +37,15 @@ public class User {
     public User() {
     }
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(UserRegistration pUser, String pHashedPassword){
         this.email =pUser.email();
         this.username = pUser.username();
-        this.password = pUser.password();
+        this.password = pHashedPassword;
         this.role = pUser.role();
+        this.createdAt = LocalDateTime.now();
     }
 }

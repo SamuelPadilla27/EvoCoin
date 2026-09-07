@@ -6,6 +6,7 @@ import com.crypto.EvoCoin.user.model.UserRegistration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -21,23 +22,14 @@ public class UserService {
     }
 
 
+    @Transactional
     public void saveUser(UserRegistration pUser){
-        try {
-            String passwordHash = passwordEncoder.encode(pUser.password());
-            User vSave = new User(pUser, passwordHash);
-            this.userDao.save(vSave);
-        } catch (Exception e) {
-            log.error("Failed: saveUser", e);
-            throw e;
-        }
+        String passwordHash = passwordEncoder.encode(pUser.password());
+        User vSave = new User(pUser, passwordHash);
+        this.userDao.save(vSave);
     }
 
     public User findUserByUsername(String pUser){
-        try {
-            return userDao.findUserByUsername(pUser);
-        } catch (Exception e) {
-            log.error("Failed: findUserByUsername", e);
-            throw e;
-        }
+        return userDao.findUserByUsername(pUser);
     }
 }

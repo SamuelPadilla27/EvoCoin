@@ -2,10 +2,7 @@ package com.crypto.EvoCoin.user.dao;
 
 import com.crypto.EvoCoin.common.abstractDao.AbstractDao;
 import com.crypto.EvoCoin.user.entity.User;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -19,14 +16,16 @@ public class UserDao extends AbstractDao<User, Long> {
     public User findUserByUsername(String pUsername){
 
         try {
-            return getCurrentSession().createQuery(
+            return entityManager.createQuery(
                     "SELECT user FROM User AS user WHERE user.username = :pUsername "
                     , User.class)
                     .setParameter("pUsername", pUsername)
-                    .uniqueResult();
-        } catch (RuntimeException e) {
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+        } catch (Exception e) {
             log.error("Failed: findUserByUsername", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed: findUserByUsername", e);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.crypto.EvoCoin.common.abstractDao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,27 +11,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractDao<T, ID> {
 
     private Class<T> clazz;
-    @Autowired
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     public void setClazz(final Class<T> clazz){
         this.clazz = clazz;
     }
 
-    public Session getCurrentSession(){
-        return sessionFactory.getCurrentSession();
-    }
+//    public EntityManager getEntityManager() {
+//        return entityManager;
+//    }
 
-    public void save(T pSave){
+
+    public void save(T entity) {
         try {
-            getCurrentSession().persist(pSave);
-        } catch (RuntimeException e) {
-            log.error("Failed: AbstractDao save", e);
-            throw new RuntimeException(e);
+            entityManager.persist(entity);
+        } catch (Exception e) {
+            log.error("Failed: Abstract Dao: save", e);
+            throw new RuntimeException("Failed: Abstract Dao: save", e);
         }
     }
 
-    public T findById(ID id){
-        return getCurrentSession().find(clazz, id);
+    public T findById(Class<T> clazz, ID id) {
+
+        try {
+            return entityManager.find(clazz, id);
+        } catch (Exception e) {
+            log.error("Failed: Abstract Dao: findById", e);
+            throw new RuntimeException("Failed: Abstract Dao: findById", e);
+        }
     }
 }
